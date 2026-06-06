@@ -209,8 +209,7 @@ let allData = [], dataByYear = {};
     document.querySelector('.msg') || document.body.innerHTML += '<div class="msg"><div class="spin"></div><br>⏳ Loading data...</div>';
     
     // Replace with your Google Apps Script URL
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwxYucFOc4SrR52ms8TXVDcv4_jY4a5tFg8QDBR_JsGndvl4WPzV7cTPFKFkFmw-PuuQg/exec
-';
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwxYucFOc4SrR52ms8TXVDcv4_jY4a5tFg8QDBR_JsGndvl4WPzV7cTPFKFkFmw-PuuQg/usercontent';
     // Example: const SCRIPT_URL = 'https://script.google.com/macros/s/ABC123/usercontent';
     
     const res = await fetch(SCRIPT_URL + '?v=' + Date.now());
