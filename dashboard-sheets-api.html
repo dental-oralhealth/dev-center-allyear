@@ -136,11 +136,17 @@ tbody tr:hover{background:#FFF5FB}
           <option value="2564">2564</option>
           <option value="2565">2565</option>
           <option value="2566">2566</option>
+          <option value="2567">2567</option>
+          <option value="2568">2568</option>
         </select>
         vs
         <select class="year-select" id="year2">
+          <option value="2563">2563</option>
+          <option value="2564">2564</option>
           <option value="2565">2565</option>
-          <option value="2566" selected>2566</option>
+          <option value="2566">2566</option>
+          <option value="2567">2567</option>
+          <option value="2568" selected>2568</option>
         </select>
       </div>
       <canvas id="comparisonChart" style="max-height:300px"></canvas>
@@ -176,11 +182,19 @@ tbody tr:hover{background:#FFF5FB}
     <div class="card">
       <div class="card-title">🔍 Filter & Search 2568</div>
       <div style="margin-bottom:12px">
-        <input type="text" id="provinceFilter" placeholder="🔍 จังหวัด" style="padding:6px 10px;border:1px solid var(--border);border-radius:var(--rs);font-family:'Mitr',Tahoma;font-size:12px;width:100%;max-width:200px">
+        <input type="text" id="provinceFilter" placeholder="🔍 ค้นหา (จังหวัด/สถาน)" style="padding:6px 10px;border:1px solid var(--border);border-radius:var(--rs);font-family:'Mitr',Tahoma;font-size:12px;width:100%;max-width:300px">
       </div>
       <div class="table-wrap">
         <table id="table2568">
-          <thead><tr><th>รหัส</th><th>สถาน</th><th>จังหวัด</th><th>สถานะ</th></tr></thead>
+          <thead><tr>
+            <th>รหัส สพด.</th>
+            <th>ชื่อสถานพัฒนาเด็ก</th>
+            <th>จังหวัด</th>
+            <th>เขตสุขภาพ</th>
+            <th>สังกัด</th>
+            <th>ผ่าน/ไม่ผ่าน</th>
+            <th>ผลประเมิน</th>
+          </tr></thead>
           <tbody id="table2568Body"></tbody>
         </table>
       </div>
@@ -200,50 +214,68 @@ const SHEET_NAMES = ['2563', '2564', '2565', '2566', '2567', '2568'];
 
 let allData = {}, dataByYear = {};
 
-// Fetch data from Google Sheets
+// Cache & Load data from Google Sheets
 (async () => {
   try {
-    console.log('Loading data from Google Sheets...');
+    // Show loading message
+    const loadingMsg = document.createElement('div');
+    loadingMsg.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;padding:2rem;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.15);z-index:999;text-align:center';
+    loadingMsg.innerHTML = '<div class="spin"></div><p style="margin-top:1rem;font-size:12px;color:#666">กำลังโหลดข้อมูล...</p>';
+    document.body.appendChild(loadingMsg);
     
-    for (const year of SHEET_NAMES) {
+    console.log('Loading data from Google Sheets...');
+    const startTime = performance.now();
+    
+    // Parallel fetch (faster)
+    const promises = SHEET_NAMES.map(async year => {
       const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${year}?key=${API_KEY}`;
-      const res = await fetch(url);
-      
-      if (!res.ok) {
-        console.log(`Sheet ${year} not found`);
-        continue;
-      }
-      
-      const json = await res.json();
-      const values = json.values || [];
-      
-      if (values.length === 0) continue;
-      
-      const headers = values[0];
-      const rows = [];
-      
-      for (let i = 1; i < values.length; i++) {
-        const row = values[i];
-        if (!row || row.every(cell => !cell)) continue;
+      try {
+        const res = await fetch(url);
+        if (!res.ok) return null;
         
-        const obj = {};
-        headers.forEach((h, j) => {
-          obj[h] = row[j] || '';
-        });
-        obj.year = year;
-        rows.push(obj);
+        const json = await res.json();
+        const values = json.values || [];
+        if (values.length === 0) return null;
+        
+        const headers = values[0];
+        const rows = [];
+        
+        for (let i = 1; i < values.length; i++) {
+          const row = values[i];
+          if (!row || row.every(cell => !cell)) continue;
+          
+          const obj = {};
+          headers.forEach((h, j) => obj[h] = row[j] || '');
+          obj.year = year;
+          rows.push(obj);
+        }
+        
+        return {year, rows};
+      } catch (e) {
+        console.warn(`Error loading ${year}:`, e);
+        return null;
       }
-      
-      dataByYear[year] = rows;
-      console.log(`Loaded ${rows.length} records from ${year}`);
-    }
+    });
+    
+    const results = await Promise.all(promises);
+    
+    // Populate dataByYear
+    results.forEach(r => {
+      if (r) {
+        dataByYear[r.year] = r.rows;
+        console.log(`✅ Loaded ${r.rows.length} records from ${r.year}`);
+      }
+    });
     
     // Combine all data
     Object.values(dataByYear).forEach(rows => {
       rows.forEach(r => allData[r.userid] = r);
     });
     
-    console.log('✅ Data loaded:', Object.keys(dataByYear).length, 'years');
+    const endTime = performance.now();
+    console.log(`✅ Data loaded in ${(endTime-startTime).toFixed(0)}ms`);
+    
+    loadingMsg.remove();
     
     // Initialize UI
     initTabs();
@@ -361,11 +393,20 @@ function drawTab2() {
   const y1 = document.getElementById('year1').value;
   const y2 = document.getElementById('year2').value;
   
-  document.getElementById('y1h').textContent = y1;
-  document.getElementById('y2h').textContent = y2;
+  // Prevent same year selection
+  if (y1 === y2) {
+    const newY2 = SHEET_NAMES.find(y => y !== y1) || '2568';
+    document.getElementById('year2').value = newY2;
+  }
   
-  const data1 = dataByYear[y1] || [];
-  const data2 = dataByYear[y2] || [];
+  const year1 = document.getElementById('year1').value;
+  const year2 = document.getElementById('year2').value;
+  
+  document.getElementById('y1h').textContent = year1;
+  document.getElementById('y2h').textContent = year2;
+  
+  const data1 = dataByYear[year1] || [];
+  const data2 = dataByYear[year2] || [];
   
   // Group by province
   const prov1 = {}, prov2 = {};
@@ -449,16 +490,22 @@ function drawTab3() {
 function refresh2568() {
   const data = dataByYear['2568'] || [];
   const query = document.getElementById('provinceFilter').value.toLowerCase();
-  const filtered = data.filter(r => !query || (r.province || '').toLowerCase().includes(query));
+  const filtered = data.filter(r => !query || 
+    (r.province || '').toLowerCase().includes(query) ||
+    (r.center || '').toLowerCase().includes(query)
+  );
   
   const rows = filtered.slice(0, 100).map(r => `<tr>
-    <td><code style="font-size:10px">${r.userid || ''}</code></td>
+    <td><code style="font-size:9px">${r.userid || ''}</code></td>
     <td>${r.center || ''}</td>
     <td>${r.province || ''}</td>
+    <td>${r.healthzone || ''}</td>
+    <td>${r.ministry || ''}</td>
     <td style="font-weight:600;color:${r.passfailed === 'ผ่าน' ? '#2E9E6B' : '#D47A4A'}">${r.passfailed || ''}</td>
+    <td>${r.results3.1.3b || ''}</td>
   </tr>`).join('');
   
-  document.getElementById('table2568Body').innerHTML = rows || '<tr><td colspan="4" style="text-align:center;color:#999">No results</td></tr>';
+  document.getElementById('table2568Body').innerHTML = rows || '<tr><td colspan="7" style="text-align:center;color:#999">No results</td></tr>';
 }
 
 document.getElementById('provinceFilter')?.addEventListener('input', refresh2568);
