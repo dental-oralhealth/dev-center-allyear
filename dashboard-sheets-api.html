@@ -129,7 +129,7 @@ tbody tr:hover{background:#FFF5FB}
   <!-- TAB 2: COMPARISON -->
   <div class="tab-content" id="comparison">
     <div class="card">
-      <div class="card-title">
+      <div class="card-title" style="display:flex;align-items:center;gap:15px;flex-wrap:wrap">
         เปรียบเทียบ:
         <select class="year-select" id="year1">
           <option value="2563">2563</option>
@@ -139,7 +139,7 @@ tbody tr:hover{background:#FFF5FB}
           <option value="2567">2567</option>
           <option value="2568">2568</option>
         </select>
-        vs
+        <span style="font-weight:600;color:var(--muted)">vs</span>
         <select class="year-select" id="year2">
           <option value="2563">2563</option>
           <option value="2564">2564</option>
@@ -149,14 +149,68 @@ tbody tr:hover{background:#FFF5FB}
           <option value="2568" selected>2568</option>
         </select>
       </div>
-      <canvas id="comparisonChart" style="max-height:300px"></canvas>
     </div>
 
+    <!-- Donut Charts Side-by-side -->
     <div class="card">
-      <div class="card-title">📊 Province Comparison Table</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px">
+        <div style="text-align:center">
+          <div style="font-size:12px;color:var(--muted);margin-bottom:10px" id="donut1Label">2563</div>
+          <canvas id="donut1" width="150" height="150" style="display:block;margin:auto"></canvas>
+          <div style="margin-top:10px;font-size:11px">
+            ✅ <span id="pass1">-</span> | ❌ <span id="fail1">-</span>
+          </div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:12px;color:var(--muted);margin-bottom:10px" id="donut2Label">2568</div>
+          <canvas id="donut2" width="150" height="150" style="display:block;margin:auto"></canvas>
+          <div style="margin-top:10px;font-size:11px">
+            ✅ <span id="pass2">-</span> | ❌ <span id="fail2">-</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Summary Insight Card -->
+    <div class="card" style="background:linear-gradient(135deg,#ECEFFE,#FFE4ED);border-color:#D4A5D4">
+      <div class="card-title">📊 สรุปความเปลี่ยนแปลง</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:15px;font-size:12px">
+        <div>
+          <div style="color:var(--muted);margin-bottom:5px">ปรับปรุง</div>
+          <div style="font-size:18px;font-weight:700;color:var(--mint-d)" id="improvePct">+0%</div>
+        </div>
+        <div>
+          <div style="color:var(--muted);margin-bottom:5px">จังหวัด ดีขึ้น</div>
+          <div style="font-size:18px;font-weight:700;color:#2E9E6B" id="improveCount">0</div>
+        </div>
+        <div>
+          <div style="color:var(--muted);margin-bottom:5px">จังหวัด ลดลง</div>
+          <div style="font-size:18px;font-weight:700;color:#D47A4A" id="declineCount">0</div>
+        </div>
+        <div>
+          <div style="color:var(--muted);margin-bottom:5px">จังหวัด ไม่เปลี่ยน</div>
+          <div style="font-size:18px;font-weight:700;color:#999" id="sameCount">0</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bar Chart Comparison -->
+    <div class="card">
+      <div class="card-title">📊 เปรียบเทียบรายจังหวัด</div>
+      <canvas id="comparisonChart" style="max-height:350px"></canvas>
+    </div>
+
+    <!-- Comparison Table -->
+    <div class="card">
+      <div class="card-title">📋 ตารางเปรียบเทียบ 77 จังหวัด</div>
       <div class="table-wrap">
-        <table id="comparisonTable">
-          <thead><tr><th>จังหวัด</th><th id="y1h"></th><th id="y2h"></th><th>ความแตกต่าง</th></tr></thead>
+        <table id="comparisonTable" style="font-size:11px">
+          <thead><tr>
+            <th>จังหวัด</th>
+            <th id="y1h">2563</th>
+            <th id="y2h">2568</th>
+            <th>ความแตกต่าง</th>
+          </tr></thead>
           <tbody id="comparisonTbody"></tbody>
         </table>
       </div>
@@ -481,20 +535,38 @@ function drawTab2() {
   const y1 = document.getElementById('year1').value;
   const y2 = document.getElementById('year2').value;
   
-  // Prevent same year selection
+  // Prevent same year
   if (y1 === y2) {
     const newY2 = SHEET_NAMES.find(y => y !== y1) || '2568';
     document.getElementById('year2').value = newY2;
+    return drawTab2(); // Recursive
   }
   
   const year1 = document.getElementById('year1').value;
   const year2 = document.getElementById('year2').value;
   
+  document.getElementById('donut1Label').textContent = year1;
+  document.getElementById('donut2Label').textContent = year2;
   document.getElementById('y1h').textContent = year1;
   document.getElementById('y2h').textContent = year2;
   
   const data1 = dataByYear[year1] || [];
   const data2 = dataByYear[year2] || [];
+  
+  // Count pass/fail
+  const pass1 = data1.filter(r => r.passfailed === 'ผ่าน').length;
+  const fail1 = data1.length - pass1;
+  const pass2 = data2.filter(r => r.passfailed === 'ผ่าน').length;
+  const fail2 = data2.length - pass2;
+  
+  document.getElementById('pass1').textContent = pass1;
+  document.getElementById('fail1').textContent = fail1;
+  document.getElementById('pass2').textContent = pass2;
+  document.getElementById('fail2').textContent = fail2;
+  
+  // Draw donuts
+  drawDonut(document.getElementById('donut1'), pass1, fail1);
+  drawDonut(document.getElementById('donut2'), pass2, fail2);
   
   // Group by province
   const prov1 = {}, prov2 = {};
@@ -512,28 +584,126 @@ function drawTab2() {
     else prov2[p].fail++;
   });
   
-  // Table
   const provinces = [...new Set([...Object.keys(prov1), ...Object.keys(prov2)])].sort();
+  
+  // Summary insights
+  let improveCount = 0, declineCount = 0, sameCount = 0;
+  provinces.forEach(p => {
+    const p1 = prov1[p] || {pass: 0, fail: 0};
+    const p2 = prov2[p] || {pass: 0, fail: 0};
+    const t1 = p1.pass + p1.fail || 1;
+    const t2 = p2.pass + p2.fail || 1;
+    const pct1 = Math.round(p1.pass/t1*100);
+    const pct2 = Math.round(p2.pass/t2*100);
+    
+    if (pct2 > pct1) improveCount++;
+    else if (pct2 < pct1) declineCount++;
+    else sameCount++;
+  });
+  
+  const pct1Overall = data1.length ? Math.round(pass1/data1.length*100) : 0;
+  const pct2Overall = data2.length ? Math.round(pass2/data2.length*100) : 0;
+  const changePct = pct2Overall - pct1Overall;
+  
+  document.getElementById('improvePct').textContent = (changePct > 0 ? '+' : '') + changePct + '%';
+  document.getElementById('improvePct').style.color = changePct > 0 ? '#2E9E6B' : changePct < 0 ? '#D47A4A' : '#999';
+  document.getElementById('improveCount').textContent = improveCount;
+  document.getElementById('declineCount').textContent = declineCount;
+  document.getElementById('sameCount').textContent = sameCount;
+  
+  // Table
   const tableHTML = provinces.map(p => {
     const p1 = prov1[p] || {pass: 0, fail: 0};
     const p2 = prov2[p] || {pass: 0, fail: 0};
-    const t1 = p1.pass + p1.fail;
-    const t2 = p2.pass + p2.fail;
-    const pct1 = t1 ? Math.round(p1.pass/t1*100) : 0;
-    const pct2 = t2 ? Math.round(p2.pass/t2*100) : 0;
+    const t1 = p1.pass + p1.fail || 1;
+    const t2 = p2.pass + p2.fail || 1;
+    const pct1 = Math.round(p1.pass/t1*100);
+    const pct2 = Math.round(p2.pass/t2*100);
     const diff = pct2 - pct1;
     return `<tr>
       <td>${p}</td>
       <td>${pct1}%</td>
       <td>${pct2}%</td>
-      <td style="color:${diff>0?'#2E9E6B':diff<0?'#D47A4A':'#999'}">${diff>0?'+':''}${diff}%</td>
+      <td style="font-weight:600;color:${diff>0?'#2E9E6B':diff<0?'#D47A4A':'#999'}">${diff>0?'+':''}${diff}%</td>
     </tr>`;
   }).join('');
   document.getElementById('comparisonTbody').innerHTML = tableHTML;
+  
+  // Bar chart
+  drawComparisonBarChart(provinces, prov1, prov2);
 }
 
-document.getElementById('year1')?.addEventListener('change', drawTab2);
-document.getElementById('year2')?.addEventListener('change', drawTab2);
+function drawDonut(canvas, pass, fail) {
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const cx = W/2, cy = H/2, r = W*0.35;
+  ctx.clearRect(0, 0, W, H);
+  
+  const total = pass + fail || 1;
+  const pct = pass / total;
+  
+  // Green (pass)
+  ctx.fillStyle = '#6DD8A8';
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, -Math.PI/2, -Math.PI/2 + pct*Math.PI*2);
+  ctx.lineTo(cx, cy);
+  ctx.fill();
+  
+  // Orange (fail)
+  ctx.fillStyle = '#FFB997';
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, -Math.PI/2 + pct*Math.PI*2, -Math.PI/2 + Math.PI*2);
+  ctx.lineTo(cx, cy);
+  ctx.fill();
+  
+  // Center text
+  ctx.font = 'bold 22px Mitr,Tahoma';
+  ctx.fillStyle = '#3D2B47';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(Math.round(pct*100) + '%', cx, cy);
+}
+
+function drawComparisonBarChart(provinces, prov1, prov2) {
+  const canvas = document.getElementById('comparisonChart');
+  const ctx = canvas.getContext('2d');
+  
+  canvas.width = canvas.offsetWidth;
+  canvas.height = 300;
+  const W = canvas.width, H = canvas.height;
+  const pad = {t:20, b:40, l:50, r:20};
+  const cW = W - pad.l - pad.r, cH = H - pad.t - pad.b;
+  
+  ctx.clearRect(0, 0, W, H);
+  
+  const barWidth = cW / (provinces.length * 2.5);
+  
+  provinces.forEach((p, i) => {
+    const p1 = prov1[p] || {pass: 0, fail: 0};
+    const p2 = prov2[p] || {pass: 0, fail: 0};
+    const t1 = p1.pass + p1.fail || 1;
+    const t2 = p2.pass + p2.fail || 1;
+    const pct1 = Math.round(p1.pass/t1*100);
+    const pct2 = Math.round(p2.pass/t2*100);
+    
+    const x1 = pad.l + i*(barWidth*2.2);
+    const x2 = x1 + barWidth + 3;
+    
+    const y1 = pad.t + cH - (pct1/100)*cH;
+    const y2 = pad.t + cH - (pct2/100)*cH;
+    
+    // Bar 1 (light color)
+    ctx.fillStyle = '#B8E0D2';
+    ctx.fillRect(x1, y1, barWidth, pad.t+cH-y1);
+    
+    // Bar 2 (dark color)
+    ctx.fillStyle = '#6DD8A8';
+    ctx.fillRect(x2, y2, barWidth, pad.t+cH-y2);
+  });
+}
+
+document.getElementById('year1')?.addEventListener('change', () => setTimeout(drawTab2, 50));
+document.getElementById('year2')?.addEventListener('change', () => setTimeout(drawTab2, 50));
 
 // TAB 3: CURRENT YEAR
 function drawTab3() {
