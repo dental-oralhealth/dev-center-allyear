@@ -398,9 +398,9 @@ function drawTab1() {
 
 function drawLineChart(ctx, labels, data) {
   // Canvas size
-  const baseWidth = ctx.canvas.offsetWidth || 800;
-  ctx.canvas.width = Math.max(baseWidth, 600); // Min 600px
-  ctx.canvas.height = 300;
+  const baseWidth = ctx.canvas.offsetWidth || 1000;
+  ctx.canvas.width = Math.max(baseWidth, 800); // Min 800px
+  ctx.canvas.height = 400;
   const W = ctx.canvas.width, H = ctx.canvas.height;
   const pad = {t:30, b:50, l:50, r:30};
   const cW = W - pad.l - pad.r, cH = H - pad.t - pad.b;
@@ -668,11 +668,13 @@ function drawComparisonBarChart(provinces, prov1, prov2) {
   const canvas = document.getElementById('comparisonChart');
   const ctx = canvas.getContext('2d');
   
-  canvas.width = canvas.offsetWidth;
-  canvas.height = 300;
+  const baseWidth = canvas.offsetWidth || 1000;
+  canvas.width = Math.max(baseWidth, 800); // Min 800px
+  canvas.height = 400;
   const W = canvas.width, H = canvas.height;
   const pad = {t:20, b:40, l:50, r:20};
   const cW = W - pad.l - pad.r, cH = H - pad.t - pad.b;
+
   
   ctx.clearRect(0, 0, W, H);
   
