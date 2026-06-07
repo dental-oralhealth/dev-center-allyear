@@ -694,62 +694,85 @@ function drawComparisonBarChart(provinces, prov1, prov2) {
   improved.sort((a, b) => b.diff - a.diff);
   
   if (improved.length === 0) {
+    canvas.width = canvas.offsetWidth;
+    canvas.height = 100;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = '#999';
     ctx.font = '12px Mitr,Tahoma';
     ctx.textAlign = 'center';
-    ctx.fillText('ไม่มีจังหวัดที่ดีขึ้น', canvas.offsetWidth/2, canvas.offsetHeight/2);
+    ctx.fillText('ไม่มีจังหวัดที่ดีขึ้น', canvas.offsetWidth/2, 50);
     return;
   }
   
+  // Set canvas dimensions
+  const barHeight = 40;
+  const spacing = 15;
+  const totalHeight = improved.length * (barHeight + spacing) + 40;
+  
   canvas.width = canvas.offsetWidth;
-  canvas.height = Math.max(300, improved.length * 25);
+  canvas.height = Math.max(400, totalHeight);
   const W = canvas.width, H = canvas.height;
-  const pad = {l:120, r:20, t:15, b:20};
-  const cW = W - pad.l - pad.r, cH = H - pad.t - pad.b;
+  const pad = {l:150, r:80, t:30, b:30};
+  const cW = W - pad.l - pad.r;
   
   ctx.clearRect(0, 0, W, H);
   
-  const barHeight = cH / improved.length;
+  // Title
+  ctx.fillStyle = '#3D2B47';
+  ctx.font = 'bold 13px Mitr,Tahoma';
+  ctx.textAlign = 'left';
+  ctx.fillText('จังหวัดที่ดีขึ้น', pad.l, 20);
   
   improved.forEach((item, i) => {
-    const y = pad.t + i*barHeight + barHeight/2 - 8;
+    const y = pad.t + 20 + i*(barHeight + spacing);
     const x_base = pad.l;
-    const scale = cW / 100;
+    const maxWidth = cW;
     
-    // Label (province)
+    // Province name (left)
     ctx.fillStyle = '#3D2B47';
     ctx.font = '11px Mitr,Tahoma';
     ctx.textAlign = 'right';
-    ctx.fillText(item.name, pad.l - 10, y + 10);
+    ctx.fillText(item.name, pad.l - 15, y + barHeight/2 + 5);
     
-    // Bar 1 (year1 - light green)
+    // Bar 1 (year1 - light green) - top
     ctx.fillStyle = '#B8E0D2';
-    const bar1Width = item.pct1 * scale;
-    ctx.fillRect(x_base, y, bar1Width, 15);
+    const bar1Width = (item.pct1 / 100) * maxWidth;
+    ctx.fillRect(x_base, y, bar1Width, barHeight/2 - 2);
     
-    // Bar 2 (year2 - dark green/orange)
+    // Bar 2 (year2 - dark green) - bottom
     ctx.fillStyle = '#6DD8A8';
-    const bar2Width = item.pct2 * scale;
-    ctx.fillRect(x_base, y + 17, bar2Width, 15);
+    const bar2Width = (item.pct2 / 100) * maxWidth;
+    ctx.fillRect(x_base, y + barHeight/2 + 2, bar2Width, barHeight/2 - 2);
     
-    // Value labels
+    // Value labels (right of bars)
     ctx.fillStyle = '#3D2B47';
     ctx.font = 'bold 10px Mitr,Tahoma';
     ctx.textAlign = 'left';
-    ctx.fillText(item.pct1 + '%', x_base + bar1Width + 5, y + 11);
-    ctx.fillText(item.pct2 + '%', x_base + bar2Width + 5, y + 28);
+    ctx.fillText(item.pct1 + '%', x_base + Math.max(bar1Width, 5) + 8, y + 12);
+    ctx.fillText(item.pct2 + '%', x_base + Math.max(bar2Width, 5) + 8, y + barHeight - 5);
     
-    // Improvement badge
+    // Improvement badge (far right)
     ctx.fillStyle = '#2E9E6B';
-    ctx.font = 'bold 10px Mitr,Tahoma';
+    ctx.font = 'bold 11px Mitr,Tahoma';
     ctx.textAlign = 'left';
-    ctx.fillText('+' + item.diff + '%', W - pad.r - 40, y + 20);
+    ctx.fillText('+' + item.diff + '%', W - pad.r + 10, y + barHeight/2 + 5);
   });
   
   // Legend
   ctx.fillStyle = '#999';
   ctx.font = '10px Mitr,Tahoma';
-  ctx.fillText('█ ปีแรก  █ ปีที่สอง', pad.l, H - 5);
+  ctx.fillRect(pad.l, H - 20, 12, 12);
+  ctx.fillStyle = '#B8E0D2';
+  ctx.fillRect(pad.l, H - 20, 12, 12);
+  ctx.fillStyle = '#666';
+  ctx.textAlign = 'left';
+  ctx.fillText('= ปีแรก', pad.l + 18, H - 11);
+  
+  ctx.fillStyle = '#6DD8A8';
+  ctx.fillRect(pad.l + 90, H - 20, 12, 12);
+  ctx.fillStyle = '#666';
+  ctx.textAlign = 'left';
+  ctx.fillText('= ปีที่สอง', pad.l + 108, H - 11);
 }
 
 document.getElementById('year1')?.addEventListener('change', () => setTimeout(drawTab2, 50));
