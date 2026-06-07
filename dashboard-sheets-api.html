@@ -95,7 +95,7 @@ tbody tr:hover{background:#FFF5FB}
   <div class="hdr-logo">📊</div>
   <div class="hdr-txt">
     <h1>ระบบติดตามผลการประเมินสถานพัฒนาเด็กปฐมวัย</h1>
-    <p>วิเคราะห์ข้อมูล (Google Sheets API)</p>
+    <p>สำนักทันตสาธารณสุข · กรมอนามัย · กระทรวงสาธารณสุข</p>
   </div>
   <div class="hdr-badge">📈 Multi-Year</div>
 </header>
@@ -105,7 +105,7 @@ tbody tr:hover{background:#FFF5FB}
   <div class="tabs">
     <button class="tab active" data-tab="overview">📊 Overview</button>
     <button class="tab" data-tab="comparison">🔍 Comparison</button>
-    <button class="tab" data-tab="current">📈 Current 2568</button>
+    <button class="tab" data-tab="current">📈 Current Year</button>
   </div>
 
   <!-- TAB 1: OVERVIEW -->
@@ -182,7 +182,7 @@ tbody tr:hover{background:#FFF5FB}
     <div class="card">
       <div class="card-title">🔍 Filter & Search 2568</div>
       <div style="margin-bottom:12px">
-        <input type="text" id="provinceFilter" placeholder="🔍 ค้นหา (จังหวัด/สถาน)" style="padding:6px 10px;border:1px solid var(--border);border-radius:var(--rs);font-family:'Mitr',Tahoma;font-size:12px;width:100%;max-width:300px">
+        <input type="text" id="provinceFilter" placeholder="🔍 ค้นหา (จังหวัด/สพด.)" style="padding:6px 10px;border:1px solid var(--border);border-radius:var(--rs);font-family:'Mitr',Tahoma;font-size:12px;width:100%;max-width:300px">
       </div>
       <div class="table-wrap">
         <table id="table2568">
@@ -204,7 +204,7 @@ tbody tr:hover{background:#FFF5FB}
 </div>
 
 <footer class="foot">
-  📡 Data from Google Sheets API | Real-time sync | © 2568 สพด.
+  📡 Data from Google Sheets API | Real-time sync | © 2568 กลุ่มสนับสนุนวิชาการและการวิจัย สำนักทันตสาธารณสุข โทรศัพท์ 0 2590 4477
 </footer>
 
 <script>
@@ -344,7 +344,7 @@ function drawTab1() {
 
 function drawLineChart(ctx, labels, data) {
   ctx.canvas.width = ctx.canvas.offsetWidth;
-  ctx.canvas.height = 250;
+  ctx.canvas.height = 300;
   const W = ctx.canvas.width, H = ctx.canvas.height;
   const pad = {t:30, b:50, l:50, r:30};
   const cW = W - pad.l - pad.r, cH = H - pad.t - pad.b;
@@ -364,9 +364,9 @@ function drawLineChart(ctx, labels, data) {
   ctx.strokeRect(pad.l, pad.t, cW, cH);
   
   // Grid lines (horizontal)
-  const min = 75, max = 85;
-  for (let i = 0; i <= 5; i++) {
-    const y = pad.t + (i/5)*cH;
+  const min = 70, max = 85;
+  for (let i = 0; i <= 6; i++) {
+    const y = pad.t + (i/6)*cH;
     ctx.strokeStyle = '#DDD';
     ctx.lineWidth = 1;
     ctx.beginPath();
@@ -410,7 +410,7 @@ function drawLineChart(ctx, labels, data) {
   lineGrad.addColorStop(1, '#6DD8A8');    // Green
   
   ctx.strokeStyle = lineGrad;
-  ctx.lineWidth = 5;
+  ctx.lineWidth = 3;
   ctx.lineJoin = 'round';
   ctx.lineCap = 'round';
   ctx.beginPath();
