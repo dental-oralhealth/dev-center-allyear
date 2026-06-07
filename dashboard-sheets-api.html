@@ -704,75 +704,92 @@ function drawComparisonBarChart(provinces, prov1, prov2) {
     return;
   }
   
-  // Set canvas dimensions
-  const barHeight = 40;
-  const spacing = 15;
-  const totalHeight = improved.length * (barHeight + spacing) + 40;
-  
-  canvas.width = canvas.offsetWidth;
-  canvas.height = Math.max(400, totalHeight);
+  // Set canvas
+  canvas.width = Math.max(canvas.offsetWidth, 600);
+  canvas.height = 350;
   const W = canvas.width, H = canvas.height;
-  const pad = {l:150, r:80, t:30, b:30};
-  const cW = W - pad.l - pad.r;
+  const pad = {l:50, r:50, t:30, b:50};
+  const cW = W - pad.l - pad.r, cH = H - pad.t - pad.b;
   
   ctx.clearRect(0, 0, W, H);
   
-  // Title
-  ctx.fillStyle = '#3D2B47';
-  ctx.font = 'bold 13px Mitr,Tahoma';
-  ctx.textAlign = 'left';
-  ctx.fillText('จังหวัดที่ดีขึ้น', pad.l, 20);
+  // Background
+  ctx.fillStyle = '#FFF5FB';
+  ctx.fillRect(pad.l, pad.t, cW, cH);
   
-  improved.forEach((item, i) => {
-    const y = pad.t + 20 + i*(barHeight + spacing);
-    const x_base = pad.l;
-    const maxWidth = cW;
+  // Grid lines (Y-axis)
+  for (let i = 0; i <= 5; i++) {
+    const y = pad.t + (i/5)*cH;
+    ctx.strokeStyle = '#DDD';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(pad.l, y);
+    ctx.lineTo(pad.l+cW, y);
+    ctx.stroke();
     
-    // Province name (left)
-    ctx.fillStyle = '#3D2B47';
-    ctx.font = '11px Mitr,Tahoma';
+    // Y-axis labels
+    const val = 100 - (i/5)*100;
+    ctx.fillStyle = '#999';
+    ctx.font = '10px Mitr,Tahoma';
     ctx.textAlign = 'right';
-    ctx.fillText(item.name, pad.l - 15, y + barHeight/2 + 5);
+    ctx.fillText(Math.round(val) + '%', pad.l-8, y+3);
+  }
+  
+  // Bar calculations
+  const barSpacing = cW / (improved.length * 2.8);
+  const barWidth = barSpacing * 0.9 / 2; // 2 bars per province
+  
+  // Draw bars
+  improved.forEach((item, i) => {
+    const centerX = pad.l + i*barSpacing*2.8 + barSpacing;
     
-    // Bar 1 (year1 - light green) - top
-    ctx.fillStyle = '#B8E0D2';
-    const bar1Width = (item.pct1 / 100) * maxWidth;
-    ctx.fillRect(x_base, y, bar1Width, barHeight/2 - 2);
+    // Bar 1 (year1 - dark blue)
+    const h1 = (item.pct1/100) * cH;
+    const y1 = pad.t + cH - h1;
+    ctx.fillStyle = '#1E5A96';
+    ctx.fillRect(centerX - barWidth - 2, y1, barWidth, h1);
     
-    // Bar 2 (year2 - dark green) - bottom
-    ctx.fillStyle = '#6DD8A8';
-    const bar2Width = (item.pct2 / 100) * maxWidth;
-    ctx.fillRect(x_base, y + barHeight/2 + 2, bar2Width, barHeight/2 - 2);
+    // Bar 2 (year2 - light blue)
+    const h2 = (item.pct2/100) * cH;
+    const y2 = pad.t + cH - h2;
+    ctx.fillStyle = '#4FA3D1';
+    ctx.fillRect(centerX + 2, y2, barWidth, h2);
     
-    // Value labels (right of bars)
+    // Value labels on bars
+    ctx.fillStyle = '#FFF';
+    ctx.font = 'bold 9px Mitr,Tahoma';
+    ctx.textAlign = 'center';
+    ctx.fillText(item.pct1 + '%', centerX - barWidth/2 - 2, y1 + h1/2 + 3);
+    ctx.fillText(item.pct2 + '%', centerX + barWidth/2 + 2, y2 + h2/2 + 3);
+    
+    // Province label (X-axis)
     ctx.fillStyle = '#3D2B47';
-    ctx.font = 'bold 10px Mitr,Tahoma';
-    ctx.textAlign = 'left';
-    ctx.fillText(item.pct1 + '%', x_base + Math.max(bar1Width, 5) + 8, y + 12);
-    ctx.fillText(item.pct2 + '%', x_base + Math.max(bar2Width, 5) + 8, y + barHeight - 5);
-    
-    // Improvement badge (far right)
-    ctx.fillStyle = '#2E9E6B';
-    ctx.font = 'bold 11px Mitr,Tahoma';
-    ctx.textAlign = 'left';
-    ctx.fillText('+' + item.diff + '%', W - pad.r + 10, y + barHeight/2 + 5);
+    ctx.font = '10px Mitr,Tahoma';
+    ctx.textAlign = 'center';
+    ctx.save();
+    ctx.translate(centerX, pad.t + cH + 25);
+    ctx.rotate(-Math.PI/6); // 30 degree angle
+    ctx.fillText(item.name, 0, 0);
+    ctx.restore();
   });
   
-  // Legend
-  ctx.fillStyle = '#999';
-  ctx.font = '10px Mitr,Tahoma';
-  ctx.fillRect(pad.l, H - 20, 12, 12);
-  ctx.fillStyle = '#B8E0D2';
-  ctx.fillRect(pad.l, H - 20, 12, 12);
-  ctx.fillStyle = '#666';
-  ctx.textAlign = 'left';
-  ctx.fillText('= ปีแรก', pad.l + 18, H - 11);
+  // Border
+  ctx.strokeStyle = '#A8D8EA';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(pad.l, pad.t, cW, cH);
   
-  ctx.fillStyle = '#6DD8A8';
-  ctx.fillRect(pad.l + 90, H - 20, 12, 12);
+  // Legend
+  ctx.fillStyle = '#1E5A96';
+  ctx.fillRect(pad.l, H - 30, 12, 12);
   ctx.fillStyle = '#666';
+  ctx.font = '10px Mitr,Tahoma';
   ctx.textAlign = 'left';
-  ctx.fillText('= ปีที่สอง', pad.l + 108, H - 11);
+  ctx.fillText('ปีแรก', pad.l + 18, H - 22);
+  
+  ctx.fillStyle = '#4FA3D1';
+  ctx.fillRect(pad.l + 100, H - 30, 12, 12);
+  ctx.fillStyle = '#666';
+  ctx.fillText('ปีที่สอง', pad.l + 118, H - 22);
 }
 
 document.getElementById('year1')?.addEventListener('change', () => setTimeout(drawTab2, 50));
