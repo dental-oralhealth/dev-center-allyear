@@ -344,22 +344,29 @@ function drawTab1() {
 
 function drawLineChart(ctx, labels, data) {
   ctx.canvas.width = ctx.canvas.offsetWidth;
-  ctx.canvas.height = 320; // เพิ่มความสูง
+  ctx.canvas.height = 300;
   const W = ctx.canvas.width, H = ctx.canvas.height;
-  const pad = {t:30, b:50, l:60, r:40};
+  const pad = {t:30, b:50, l:50, r:30};
   const cW = W - pad.l - pad.r, cH = H - pad.t - pad.b;
   
   ctx.clearRect(0, 0, W, H);
   
-  // Background
-  ctx.fillStyle = '#FFF5FB';
+  // Background gradient
+  const bgGrad = ctx.createLinearGradient(0, pad.t, 0, pad.t+cH);
+  bgGrad.addColorStop(0, '#E8F4FF');
+  bgGrad.addColorStop(1, '#F0EDFF');
+  ctx.fillStyle = bgGrad;
   ctx.fillRect(pad.l, pad.t, cW, cH);
   
-  // Grid lines + labels (Y axis)
-  for (let i = 0; i <= 10; i++) {
-    const y = pad.t + (i/10)*cH;
-    const val = 100 - i*10;
-    
+  // Border
+  ctx.strokeStyle = '#A8D8EA';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(pad.l, pad.t, cW, cH);
+  
+  // Grid lines (horizontal)
+  const min = 70, max = 85;
+  for (let i = 0; i <= 6; i++) {
+    const y = pad.t + (i/6)*cH;
     ctx.strokeStyle = '#DDD';
     ctx.lineWidth = 1;
     ctx.beginPath();
@@ -367,14 +374,17 @@ function drawLineChart(ctx, labels, data) {
     ctx.lineTo(pad.l+cW, y);
     ctx.stroke();
     
+    // Y-axis labels
+    const val = max - (i/6)*(max-min);
     ctx.fillStyle = '#999';
     ctx.font = '10px Mitr,Tahoma';
     ctx.textAlign = 'right';
-    ctx.fillText(val + '%', pad.l-8, y+3);
+    ctx.fillText(Math.round(val) + '%', pad.l-8, y+3);
   }
   
   // Target line (78%)
-  const targetY = pad.t + cH - (78/100)*cH;
+  const targetPct = (78 - min) / (max - min);
+  const targetY = pad.t + cH - targetPct*cH;
   ctx.strokeStyle = '#FFB997';
   ctx.lineWidth = 2;
   ctx.setLineDash([5, 5]);
@@ -386,61 +396,71 @@ function drawLineChart(ctx, labels, data) {
   
   // Target label
   ctx.fillStyle = '#D47A4A';
-  ctx.font = 'bold 11px Mitr,Tahoma';
+  ctx.font = '11px Mitr,Tahoma';
   ctx.textAlign = 'left';
-  ctx.fillText('Target 78%', pad.l+5, targetY-5);
+  ctx.fillText('เป้าประสงค์ 78%', pad.l+5, targetY-5);
   
-  // Smooth curve line
+  // Smooth curve
   const gap = cW / (data.length - 1);
-  ctx.strokeStyle = '#6DD8A8';
+  
+  // Gradient line colors
+  const lineGrad = ctx.createLinearGradient(pad.l, 0, pad.l+cW, 0);
+  lineGrad.addColorStop(0, '#5BA3D0');    // Blue
+  lineGrad.addColorStop(0.5, '#7FBD9F');  // Mint
+  lineGrad.addColorStop(1, '#6DD8A8');    // Green
+  
+  ctx.strokeStyle = lineGrad;
   ctx.lineWidth = 3;
   ctx.lineJoin = 'round';
   ctx.lineCap = 'round';
   ctx.beginPath();
   
-  // Bezier curve for smooth line
+  // Bezier curve
   for (let i = 0; i < data.length; i++) {
     const x = pad.l + i*gap;
-    const y = pad.t + cH - (data[i]/100)*cH;
+    const pct = (data[i] - min) / (max - min);
+    const y = pad.t + cH - pct*cH;
     
     if (i === 0) {
       ctx.moveTo(x, y);
     } else {
       const prevX = pad.l + (i-1)*gap;
-      const prevY = pad.t + cH - (data[i-1]/100)*cH;
+      const prevPct = (data[i-1] - min) / (max - min);
+      const prevY = pad.t + cH - prevPct*cH;
       const cpX = (prevX + x) / 2;
-      const cpY1 = prevY;
-      const cpY2 = y;
-      ctx.bezierCurveTo(cpX, cpY1, cpX, cpY2, x, y);
+      ctx.bezierCurveTo(cpX, prevY, cpX, y, x, y);
     }
   }
   ctx.stroke();
   
-  // Data points with gradient colors
-  const gradient = (val) => {
-    if (val < 70) return '#FFB997'; // Orange (low)
-    if (val < 78) return '#FFD770'; // Yellow (medium)
-    return '#6DD8A8'; // Green (high)
-  };
-  
+  // Data points
   data.forEach((val, i) => {
     const x = pad.l + i*gap;
-    const y = pad.t + cH - (val/100)*cH;
+    const pct = (val - min) / (max - min);
+    const y = pad.t + cH - pct*cH;
     
-    // Point circle
-    ctx.fillStyle = gradient(val);
+    // Point with gradient
+    const pointGrad = ctx.createRadialGradient(x, y, 0, x, y, 5);
+    pointGrad.addColorStop(0, '#6DD8A8');
+    pointGrad.addColorStop(1, '#2E9E6B');
+    ctx.fillStyle = pointGrad;
     ctx.beginPath();
     ctx.arc(x, y, 5, 0, Math.PI*2);
     ctx.fill();
     
+    // White border
+    ctx.strokeStyle = '#FFF';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    
     // Value label
     ctx.fillStyle = '#3D2B47';
-    ctx.font = 'bold 11px Mitr,Tahoma';
+    ctx.font = 'bold 12px Mitr,Tahoma';
     ctx.textAlign = 'center';
-    ctx.fillText(val + '%', x, y-12);
+    ctx.fillText(val + '%', x, y-14);
   });
   
-  // X axis labels
+  // X-axis labels
   ctx.fillStyle = '#666';
   ctx.font = '11px Mitr,Tahoma';
   ctx.textAlign = 'center';
@@ -448,16 +468,6 @@ function drawLineChart(ctx, labels, data) {
     const x = pad.l + i*gap;
     ctx.fillText(lbl, x, H - 15);
   });
-  
-  // Y axis label
-  ctx.save();
-  ctx.translate(15, pad.t + cH/2);
-  ctx.rotate(-Math.PI/2);
-  ctx.fillStyle = '#999';
-  ctx.font = '11px Mitr,Tahoma';
-  ctx.textAlign = 'center';
-  ctx.fillText('ร้อยละ', 0, 0);
-  ctx.restore();
 }
 
 // TAB 2: COMPARISON
