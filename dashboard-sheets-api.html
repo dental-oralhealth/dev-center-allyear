@@ -344,7 +344,7 @@ function drawTab1() {
 
 function drawLineChart(ctx, labels, data) {
   ctx.canvas.width = ctx.canvas.offsetWidth;
-  ctx.canvas.height = 500;
+  ctx.canvas.height = 250;
   const W = ctx.canvas.width, H = ctx.canvas.height;
   const pad = {t:30, b:50, l:50, r:30};
   const cW = W - pad.l - pad.r, cH = H - pad.t - pad.b;
@@ -365,8 +365,8 @@ function drawLineChart(ctx, labels, data) {
   
   // Grid lines (horizontal)
   const min = 75, max = 85;
-  for (let i = 0; i <= 6; i++) {
-    const y = pad.t + (i/6)*cH;
+  for (let i = 0; i <= 5; i++) {
+    const y = pad.t + (i/5)*cH;
     ctx.strokeStyle = '#DDD';
     ctx.lineWidth = 1;
     ctx.beginPath();
