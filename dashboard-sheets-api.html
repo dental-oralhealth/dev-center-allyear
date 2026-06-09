@@ -21,12 +21,12 @@
 html{scroll-behavior:smooth}
 body{font-family:'Mitr',Tahoma,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-weight:300}
 
-.hdr{background:linear-gradient(135deg,#F9B8D0 0%,#C4AEED 55%,#A8D8EA 100%);padding:13px 22px;display:flex;align-items:center;gap:13px;box-shadow:0 3px 16px rgba(180,100,150,.2);position:sticky;top:0;z-index:100}
-.hdr-logo{width:43px;height:43px;background:rgba(255,255,255,.75);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px}
-.hdr-txt{flex:1;min-width:0}
+.hdr{background:linear-gradient(135deg,#F9B8D0 0%,#C4AEED 55%,#A8D8EA 100%);padding:13px 22px;display:flex;align-items:center;gap:13px;box-shadow:0 3px 16px rgba(180,100,150,.2);position:sticky;top:0;z-index:100;flex-wrap:wrap;justify-content:space-between}
+.hdr-logo{width:43px;height:43px;background:rgba(255,255,255,.75);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+.hdr-txt{flex:1;min-width:0;min-width:200px}
 .hdr-txt h1{font-size:14px;font-weight:600;color:#3D2B47;line-height:1.3}
 .hdr-txt p{font-size:11px;color:rgba(61,43,71,.6);margin-top:1px}
-.hdr-badge{background:rgba(255,255,255,.8);color:#9B3A7A;font-size:11px;font-weight:600;padding:4px 13px;border-radius:20px;white-space:nowrap}
+.hdr-badge{background:rgba(255,255,255,.8);color:#9B3A7A;font-size:11px;font-weight:600;padding:4px 13px;border-radius:20px;white-space:nowrap;box-shadow:0 1px 6px rgba(0,0,0,.08)}
 
 .wrap{max-width:1440px;margin:0 auto;padding:16px 18px}
 
@@ -38,38 +38,112 @@ body{font-family:'Mitr',Tahoma,sans-serif;background:var(--bg);color:var(--text)
 .tab-content{display:none}
 .tab-content.active{display:block}
 
-.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px;box-shadow:var(--shadow);margin-bottom:16px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px;box-shadow:var(--shadow);display:flex;flex-direction:column}
 .card-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px}
 
-.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-bottom:16px}
-.kpi{background:linear-gradient(135deg,var(--lav-l),#ECEFFE);border:1px solid var(--lav);border-radius:var(--rs);padding:12px;text-align:center}
-.kpi-label{font-size:10px;color:var(--muted);margin-bottom:4px}
-.kpi-value{font-size:22px;font-weight:700;color:var(--lav-d)}
-.kpi-change{font-size:9px;color:var(--mint-d);margin-top:4px}
+/* TAB 3 Specific Styles */
+.top-bar{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:12px 16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px;box-shadow:var(--shadow)}
+.fg{display:flex;align-items:center;gap:7px}
+.fg label{font-size:11px;font-weight:500;color:var(--muted);white-space:nowrap}
+.fg select,.fg input[type=text]{font-family:'Mitr',Tahoma,sans-serif;font-size:12px;padding:6px 9px;border:1.5px solid var(--border);border-radius:var(--rs);background:var(--bg);color:var(--text);outline:none;transition:border-color .15s}
+.fg select:focus,.fg input:focus{border-color:var(--pink-d)}
+.bar-sep{width:1px;height:26px;background:var(--border);flex-shrink:0}
+.total-chip{display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,var(--pink-l),var(--lav-l));border:1.5px solid var(--pink);border-radius:var(--rs);padding:7px 15px;margin-left:auto}
+.total-chip .tc-n{font-size:21px;font-weight:600;color:var(--pink-d)}
+.total-chip .tc-l{font-size:10px;color:var(--muted);line-height:1.4}
 
-canvas{max-width:100%;height:auto;display:block;margin:16px auto}
+.cgrid{display:grid;grid-template-columns:1fr 1.8fr 1fr;gap:16px;margin-bottom:16px}
 
-.year-select{font-family:'Mitr',Tahoma,sans-serif;font-size:12px;padding:6px 9px;border:1.5px solid var(--border);border-radius:var(--rs);background:var(--bg);color:var(--text)}
+.ch{font-size:11px;font-weight:500;color:var(--muted);letter-spacing:.05em;padding-bottom:8px;margin-bottom:10px;border-bottom:1.5px dashed var(--border);flex-shrink:0}
 
-.table-wrap{overflow-x:auto;max-height:400px;overflow-y:auto}
-table{width:100%;border-collapse:collapse;font-size:11px}
-thead th{position:sticky;top:0;background:#FFF5FB;color:var(--muted);font-weight:600;font-size:10px;padding:8px;text-align:left;border-bottom:1.5px solid var(--border)}
-tbody td{padding:7px 8px;border-bottom:1px solid #FEF0F7}
-tbody tr:hover{background:#FFF5FB}
+#donutCanvasTab3,#barCanvasTab3{max-width:100%;width:auto;height:auto;display:block;margin:auto}
 
-.spin{display:inline-block;width:20px;height:20px;border:3px solid var(--border);border-top-color:var(--pink-d);border-radius:50%;animation:sp .7s linear infinite}
+.sbr{display:flex;gap:5px;margin-bottom:10px;flex-wrap:wrap}
+.sb{font-family:'Mitr',Tahoma,sans-serif;font-size:11px;padding:3px 11px;border:1.5px solid var(--border);border-radius:20px;background:transparent;color:var(--muted);cursor:pointer;transition:all .15s}
+.sb:hover{border-color:var(--pink-d);color:var(--pink-d)}
+.sb.a-all{background:var(--lav-l);border-color:var(--lav-d);color:var(--lav-d)}
+.sb.a-pass{background:var(--mint-l);border-color:var(--mint-d);color:var(--mint-d)}
+.sb.a-fail{background:var(--orange-l);border-color:var(--orange-d);color:var(--orange-d)}
+
+.leg{display:flex;gap:10px;margin-top:8px;justify-content:center;flex-wrap:wrap}
+.li{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)}
+.ld{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+
+.kpil{display:flex;flex-direction:column;gap:8px}
+.kpi{border-radius:var(--rs);padding:9px 12px;border-left:4px solid transparent;background-size:100% 100%}
+.kpi.p{background:linear-gradient(135deg,var(--mint-l) 0%,#E8FFF5 100%);border-left-color:var(--mint-d)}
+.kpi.f{background:linear-gradient(135deg,var(--orange-l) 0%,#FFF5E8 100%);border-left-color:var(--orange-d)}
+.kpi-l{font-size:10px;color:var(--muted);margin-bottom:2px;white-space:nowrap}
+.kpi-v{font-size:20px;font-weight:700;line-height:1}
+.kpi.p .kpi-v{color:var(--mint-d)}.kpi.f .kpi-v{color:var(--orange-d)}
+.pbar-wrap{background:#F0D8E8;border-radius:8px;overflow:hidden;height:8px;margin-top:8px}
+.pbar-fill{height:100%;background:linear-gradient(90deg,var(--mint-d),#8AE8C0);border-radius:8px;transition:width .6s}
+.pbar-lbl{font-size:11px;font-weight:500;color:var(--mint-d);margin-top:4px}
+
+.tcard{background:var(--card);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+.tbar{padding:12px 16px 10px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;border-bottom:1.5px dashed var(--border);background:linear-gradient(135deg,#FFF0F7,#F0EEFF)}
+.ttl{font-size:13px;font-weight:500}
+.tcnt{font-size:11px;color:var(--muted);background:var(--lav-l);border:1px solid var(--lav);padding:3px 11px;border-radius:20px}
+.tscr{overflow-x:auto;max-height:450px;overflow-y:auto}
+
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead th{position:sticky;top:0;z-index:2;background:#FFF5FB;color:var(--muted);font-weight:500;font-size:10px;text-transform:uppercase;letter-spacing:.05em;padding:9px 12px;text-align:left;border-bottom:1.5px solid var(--border);white-space:nowrap}
+tbody td{padding:8px 12px;border-bottom:1px solid #FEF0F7;color:var(--text)}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:#FFF5FB}
+code{background:#F5E8F5;color:#9B3A7A;padding:2px 4px;border-radius:3px;font-size:11px;font-family:monospace}
+
+.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:500}
+.badge::before{content:'';width:5px;height:5px;border-radius:50%}
+.bp{background:var(--mint-l);color:var(--mint-d)}.bp::before{background:var(--mint-d)}
+.bf{background:var(--orange-l);color:var(--orange-d)}.bf::before{background:var(--orange-d)}
+
+.msg{text-align:center;padding:3rem;color:var(--muted);font-size:13px}
+.spin{display:inline-block;width:22px;height:22px;border:3px solid var(--border);border-top-color:var(--pink-d);border-radius:50%;animation:sp .7s linear infinite;margin-bottom:8px}
 @keyframes sp{to{transform:rotate(360deg)}}
 
-.msg{text-align:center;padding:2rem;color:var(--muted);font-size:12px}
+.foot{margin-top:22px;background:linear-gradient(135deg,#F9D8E8,#E8DEFF);border-top:1.5px solid var(--border);padding:18px 22px;font-size:11px;color:var(--muted);text-align:center}
 
-.foot{margin-top:22px;background:linear-gradient(135deg,#F9D8E8,#E8DEFF);border-top:1.5px solid var(--border);padding:16px 22px;font-size:11px;color:var(--muted);text-align:center}
-
+@media(max-width:1200px){
+  .cgrid{grid-template-columns:150px 1fr 140px;gap:14px}
+}
+@media(max-width:1100px){
+  .cgrid{grid-template-columns:1fr 1fr}
+  .cgrid .card:last-child{grid-column:span 2;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;align-items:start}
+  .cgrid .card:last-child .ch{grid-column:span 3}
+}
 @media(max-width:900px){
+  .cgrid{grid-template-columns:1fr;gap:12px}
+  .top-bar{flex-direction:column;gap:10px;padding:10px 12px}
+  .bar-sep{display:none}
+  .fg{width:100%}
+  .fg label{font-size:11px}
+  .fg select,.fg input{font-size:12px;width:100%;padding:6px 9px}
+  .total-chip{width:100%;margin-top:8px;margin-left:0;justify-content:space-between}
   .wrap{padding:12px}
   .tabs{flex-direction:column}
   .tab{width:100%;text-align:left}
-  .kpi-grid{grid-template-columns:repeat(2,1fr)}
   canvas{max-height:250px}
+}
+@media(max-width:700px){
+  .wrap{padding:10px}
+  .hdr{padding:9px 14px;gap:9px;flex-direction:column;align-items:stretch}
+  .hdr-logo{width:40px;height:40px;font-size:20px;flex-shrink:0}
+  .hdr-txt{min-width:0}
+  .hdr-txt h1{font-size:13px}
+  .hdr-txt p{font-size:10px}
+  .hdr-badge,.btn-update{width:100%;text-align:center;padding:5px 10px}
+  .top-bar{padding:9px 11px;gap:8px;flex-direction:column}
+  .fg{width:100%}
+  .fg input{width:100%}
+  .total-chip{padding:7px 12px}
+  .total-chip .tc-n{font-size:18px}
+  .card{padding:11px}
+  .ch{font-size:10px}
+  #donutCanvasTab3{max-width:120px;height:auto}
+  table{font-size:11px}
+  thead th{padding:6px 9px;font-size:9px}
+  tbody td{padding:5px 9px}
 }
 @media(max-width:600px){
   .wrap{padding:10px}
@@ -79,13 +153,36 @@ tbody tr:hover{background:#FFF5FB}
   .tabs{gap:4px}
   .tab{padding:8px 12px;font-size:12px}
   .card{padding:12px}
-  .kpi-grid{grid-template-columns:1fr;gap:8px}
-  .kpi{padding:10px}
-  .kpi-value{font-size:18px}
-  .year-select{font-size:11px;padding:5px 8px}
   table{font-size:10px}
   thead th{padding:6px;font-size:9px}
   tbody td{padding:5px 6px}
+}
+@media(max-width:480px){
+  .wrap{padding:8px}
+  .hdr{padding:8px 12px;gap:8px}
+  .hdr-logo{width:36px;height:36px;font-size:18px}
+  .hdr-txt h1{font-size:11px}
+  .hdr-txt p{font-size:9px}
+  .hdr-badge{font-size:9px;padding:2px 8px}
+  .top-bar{padding:8px 10px;gap:8px}
+  .fg label{font-size:9px}
+  .fg select,.fg input{font-size:11px;padding:4px 7px}
+  .total-chip{padding:5px 10px;gap:6px}
+  .total-chip .tc-n{font-size:16px}
+  .total-chip .tc-l{font-size:8px}
+  .cgrid{gap:10px}
+  .card{padding:9px}
+  .ch{font-size:9px;margin-bottom:6px}
+  #donutCanvasTab3{max-width:100px;height:auto}
+  .sbr{gap:3px}
+  .sb{font-size:9px;padding:2px 8px}
+  .kpi{padding:7px 10px}
+  .kpi-l{font-size:9px}
+  .kpi-v{font-size:17px}
+  table{font-size:10px}
+  thead th{padding:4px 7px;font-size:8px}
+  tbody td{padding:4px 7px}
+  .tbar{padding:8px 10px 7px;font-size:11px}
 }
 </style>
 </head>
@@ -211,85 +308,128 @@ tbody tr:hover{background:#FFF5FB}
     </div>
   </div>
 
-  <!-- TAB 3: CURRENT YEAR -->
+  <!-- TAB 3: CURRENT YEAR - From index2567 Layout -->
   <div class="tab-content" id="current">
-    <div class="card">
-      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:space-between">
-        <div style="display:flex;align-items:center;gap:10px">
-          <label style="font-size:12px;font-weight:600">เลือกปี:</label>
-          <select class="year-select" id="yearSelect" style="padding:7px 12px">
-            <option value="2563">2563</option>
-            <option value="2564">2564</option>
-            <option value="2565">2565</option>
-            <option value="2566">2566</option>
-            <option value="2567">2567</option>
-            <option value="2568" selected>2568</option>
-          </select>
-          
-          <label style="font-size:12px;font-weight:600;margin-left:15px">สถานะ:</label>
-          <button class="status-btn" data-status="all" style="padding:6px 12px;border:1px solid #6DD8A8;background:#E0F7EF;border-radius:var(--rs);font-size:11px;cursor:pointer;font-family:Mitr,Tahoma;color:#2E9E6B;font-weight:600">ทั้งหมด</button>
-          <button class="status-btn" data-status="pass" style="padding:6px 12px;border:1px solid var(--border);background:#FFF;border-radius:var(--rs);font-size:11px;cursor:pointer;font-family:Mitr,Tahoma;color:var(--text)">✅ ผ่าน</button>
-          <button class="status-btn" data-status="fail" style="padding:6px 12px;border:1px solid var(--border);background:#FFF;border-radius:var(--rs);font-size:11px;cursor:pointer;font-family:Mitr,Tahoma;color:var(--text)">❌ ไม่ผ่าน</button>
+    <!-- Top Bar: Filters -->
+    <div class="top-bar" id="topBarTab3">
+      <div class="fg">
+        <label>เลือกปี</label>
+        <select id="yearSelectTab3" style="font-family:'Mitr',Tahoma;font-size:12px;padding:6px 9px;border:1.5px solid var(--border);border-radius:10px;background:var(--bg);color:var(--text)">
+          <option value="2563">2563</option>
+          <option value="2564">2564</option>
+          <option value="2565">2565</option>
+          <option value="2566">2566</option>
+          <option value="2567">2567</option>
+          <option value="2568" selected>2568</option>
+        </select>
+      </div>
+      <div class="bar-sep"></div>
+      <div class="fg">
+        <label>เขตสุขภาพ</label>
+        <select id="zoneFilterTab3" style="font-family:'Mitr',Tahoma;font-size:12px;padding:6px 9px;border:1.5px solid var(--border);border-radius:10px;background:var(--bg);color:var(--text)">
+          <option value="">ทั้งหมด</option>
+        </select>
+      </div>
+      <div class="bar-sep"></div>
+      <div class="fg">
+        <label>จังหวัด</label>
+        <select id="provFilterTab3" style="font-family:'Mitr',Tahoma;font-size:12px;padding:6px 9px;border:1.5px solid var(--border);border-radius:10px;background:var(--bg);color:var(--text)">
+          <option value="">ทั้งหมด</option>
+        </select>
+      </div>
+      <div class="bar-sep"></div>
+      <div class="fg">
+        <label>สังกัด</label>
+        <select id="ministryFilterTab3" style="font-family:'Mitr',Tahoma;font-size:12px;padding:6px 9px;border:1.5px solid var(--border);border-radius:10px;background:var(--bg);color:var(--text)">
+          <option value="">ทั้งหมด</option>
+        </select>
+      </div>
+      <div class="bar-sep"></div>
+      <div class="fg">
+        <label>ค้นหา</label>
+        <input type="text" id="searchInputTab3" placeholder="🔍 รหัส สพด." style="font-family:'Mitr',Tahoma;font-size:12px;padding:6px 9px;border:1.5px solid var(--border);border-radius:10px;background:var(--bg);color:var(--text);min-width:150px">
+      </div>
+      <button id="resetBtnTab3" style="background:linear-gradient(135deg,#C7CEEA,#E0E8FF);color:#5A67C4;border:none;font-family:'Mitr',Tahoma;font-size:11px;font-weight:600;padding:4px 11px;border-radius:20px;cursor:pointer;transition:all .2s">🔄 รีเซ็ต</button>
+      <div class="total-chip">
+        <div>
+          <div class="tc-l">สพด. ทั้งหมด (แห่ง)</div>
+          <div class="tc-n" id="chipTotalTab3">—</div>
         </div>
-        
-        <div style="font-size:10px;color:var(--muted)">
-          🔄 <span id="lastUpdated">เมื่อสักครู่</span>
+        <span style="font-size:28px;opacity:.35">🏫</span>
+      </div>
+    </div>
+
+    <!-- Grid: Donut + Bar + KPI -->
+    <div class="cgrid" id="cgridTab3">
+      <!-- Donut Card -->
+      <div class="card">
+        <div class="ch">🍩 ระดับคุณภาพ</div>
+        <div class="sbr" id="statusBtnsTab3">
+          <button class="sb a-all" data-val="">ทั้งหมด</button>
+          <button class="sb" data-val="ผ่าน">✅ ผ่าน</button>
+          <button class="sb" data-val="ไม่ผ่าน">❌ ไม่ผ่าน</button>
+        </div>
+        <div style="display:flex;justify-content:center;align-items:center;min-height:160px">
+          <canvas id="donutCanvasTab3"></canvas>
+        </div>
+        <div class="leg" id="donutLegTab3"></div>
+      </div>
+
+      <!-- Bar Card -->
+      <div class="card">
+        <div class="ch">📊 การกระจายตัวรายจังหวัด</div>
+        <div style="overflow-x:auto;flex:1">
+          <canvas id="barCanvasTab3" style="display:block;max-width:100%"></canvas>
+        </div>
+        <div class="leg" style="margin-top:6px">
+          <span class="li"><span class="ld" style="background:#6DD8A8"></span>ผ่าน</span>
+          <span class="li"><span class="ld" style="background:#FFB997"></span>ไม่ผ่าน</span>
+        </div>
+      </div>
+
+      <!-- KPI Card -->
+      <div class="card">
+        <div class="ch">📋 สรุปผล</div>
+        <div class="kpil">
+          <div class="kpi p">
+            <div class="kpi-l">ผ่านเกณฑ์มาตรฐาน (แห่ง)</div>
+            <div class="kpi-v" id="kpiPassTab3">—</div>
+          </div>
+          <div class="kpi f">
+            <div class="kpi-l">ยังไม่ผ่านเกณฑ์ (แห่ง)</div>
+            <div class="kpi-v" id="kpiFailTab3">—</div>
+          </div>
+          <div style="padding:0 2px;margin-top:4px">
+            <div class="kpi-l">อัตราผ่านเกณฑ์</div>
+            <div class="pbar-wrap"><div class="pbar-fill" id="pctBarTab3" style="width:0%"></div></div>
+            <div class="pbar-lbl" id="pctLblTab3">—</div>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="card">
-      <div style="display:grid;grid-template-columns:auto 1fr;gap:30px;align-items:center">
-        <div style="text-align:center">
-          <canvas id="donutCurrent" width="150" height="150" style="display:block;margin:auto"></canvas>
-          <div style="margin-top:10px;font-size:11px">
-            ✅ <span id="passCurrentCount">-</span> | ❌ <span id="failCurrentCount">-</span>
-          </div>
-        </div>
-        
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
-          <div class="kpi">
-            <div class="kpi-label">ผ่าน (สถาน)</div>
-            <div class="kpi-value" id="kpiPass">-</div>
-            <div class="kpi-change" id="kpiPassCount">0 สพด.</div>
-          </div>
-          <div class="kpi">
-            <div class="kpi-label">ไม่ผ่าน (สถาน)</div>
-            <div class="kpi-value" id="kpiFail">-</div>
-            <div class="kpi-change" id="kpiFailCount">0 สพด.</div>
-          </div>
-          <div class="kpi">
-            <div class="kpi-label">อัตราผ่าน</div>
-            <div class="kpi-value" id="kpiRate" style="color:#6DD8A8">-</div>
-            <div class="kpi-change">ร้อยละ</div>
-          </div>
-        </div>
+    <!-- Table Card -->
+    <div class="tcard" id="tcardTab3">
+      <div class="tbar">
+        <div class="ttl">📂 รายละเอียดข้อมูลสถานพัฒนาเด็กปฐมวัย</div>
+        <div class="tcnt" id="tableCountTab3">กำลังโหลด...</div>
       </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">📊 ผลประเมินรายจังหวัด</div>
-      <canvas id="barProvinceCurrent" style="max-height:300px"></canvas>
-    </div>
-
-    <div class="card">
-      <div style="margin-bottom:15px">
-        <input type="text" id="searchCurrent" placeholder="🔍 ค้นหา (จังหวัด/สถาน/รหัส)" 
-          style="padding:8px 12px;border:1.5px solid var(--border);border-radius:var(--rs);font-family:Mitr,Tahoma;font-size:12px;width:100%;max-width:300px">
-      </div>
-
-      <div class="table-wrap">
-        <table id="tableCurrentYear" style="font-size:11px">
-          <thead><tr>
-            <th>รหัส สพด.</th>
-            <th>ชื่อสถาน</th>
-            <th>จังหวัด</th>
-            <th>เขตสุขภาพ</th>
-            <th>สังกัด</th>
-            <th>ผ่าน/ไม่ผ่าน</th>
-            <th>ผลประเมิน</th>
-          </tr></thead>
-          <tbody id="tableCurrentBody"></tbody>
+      <div class="tscr">
+        <table>
+          <thead>
+            <tr>
+              <th>รหัส สพด.</th>
+              <th>ชื่อสถานพัฒนาเด็ก</th>
+              <th>จังหวัด</th>
+              <th>เขตสุขภาพ</th>
+              <th>สังกัด</th>
+              <th>ผ่าน / ไม่ผ่าน</th>
+              <th>ผล 3.1.3ข</th>
+            </tr>
+          </thead>
+          <tbody id="tbodyTab3">
+            <tr><td colspan="7" class="msg"><div class="spin"></div><br>⏳ กำลังโหลดข้อมูล...</td></tr>
+          </tbody>
         </table>
       </div>
     </div>
@@ -835,182 +975,260 @@ function drawComparisonBarChart(provinces, prov1, prov2) {
 document.getElementById('year1')?.addEventListener('change', () => setTimeout(drawTab2, 50));
 document.getElementById('year2')?.addEventListener('change', () => setTimeout(drawTab2, 50));
 
-// TAB 3: CURRENT YEAR
-let currentYear = '2568';
-let currentStatus = 'all'; // all, pass, fail
+// TAB 3: CURRENT YEAR (Adapted from index2567)
+let currentYearTab3 = '2568';
+let activeStatusTab3 = '';
+let zoneFilterTab3Val = '';
+let provFilterTab3Val = '';
+let ministryFilterTab3Val = '';
 
-function drawTab3() {
-  refreshCurrent();
+function getFilteredTab3() {
+  const allData = dataByYear[currentYearTab3] || [];
+  return allData.filter(r => {
+    if (zoneFilterTab3Val && r.healthzone !== zoneFilterTab3Val) return false;
+    if (provFilterTab3Val && r.province !== provFilterTab3Val) return false;
+    if (ministryFilterTab3Val && r.ministry !== ministryFilterTab3Val) return false;
+    if (activeStatusTab3 && r.passfailed !== activeStatusTab3) return false;
+    const query = document.getElementById('searchInputTab3')?.value?.toLowerCase() || '';
+    if (query && !(r.userid || '').toLowerCase().includes(query) && 
+        !(r.center || '').toLowerCase().includes(query) && 
+        !(r.province || '').toLowerCase().includes(query)) return false;
+    return true;
+  });
 }
 
-function refreshCurrent() {
-  let data = dataByYear[currentYear] || [];
+function populateFiltersTab3() {
+  const data = dataByYear[currentYearTab3] || [];
+  const zones = [...new Set(data.map(r => r.healthzone).filter(Boolean))].sort();
+  const provs = [...new Set(data.map(r => r.province).filter(Boolean))].sort((a,b) => a.localeCompare(b,'th'));
+  const ministries = [...new Set(data.map(r => r.ministry).filter(Boolean))].sort();
   
-  // Filter by status
-  if (currentStatus === 'pass') {
-    data = data.filter(r => r.passfailed === 'ผ่าน');
-  } else if (currentStatus === 'fail') {
-    data = data.filter(r => r.passfailed === 'ไม่ผ่าน');
-  }
+  const zoneEl = document.getElementById('zoneFilterTab3');
+  const provEl = document.getElementById('provFilterTab3');
+  const minEl = document.getElementById('ministryFilterTab3');
   
-  if (data.length === 0) {
-    document.getElementById('tableCurrentBody').innerHTML = '<tr><td colspan="7" style="text-align:center;color:#999">ไม่มีข้อมูล</td></tr>';
-    return;
-  }
-  
-  // Count pass/fail
-  const allData = dataByYear[currentYear] || [];
-  const pass = allData.filter(r => r.passfailed === 'ผ่าน').length;
-  const fail = allData.length - pass;
-  const passRate = allData.length ? Math.round(pass/allData.length*100) : 0;
-  
-  document.getElementById('passCurrentCount').textContent = pass;
-  document.getElementById('failCurrentCount').textContent = fail;
-  document.getElementById('kpiPass').textContent = pass;
-  document.getElementById('kpiPassCount').textContent = pass + ' สพด.';
-  document.getElementById('kpiFail').textContent = fail;
-  document.getElementById('kpiFailCount').textContent = fail + ' สพด.';
-  document.getElementById('kpiRate').textContent = passRate + '%';
-  
-  // Doughnut
-  drawDoughnutCurrent(document.getElementById('donutCurrent'), pass, fail);
-  
-  // Province bar chart
-  drawProvinceBarCurrent(allData);
-  
-  // Table
-  const filtered = data.slice(0, 200); // Limit to 200 rows
-  const tableHTML = filtered.map(r => `<tr>
-    <td><code style="font-size:9px">${r.userid || ''}</code></td>
-    <td>${r.center || ''}</td>
-    <td>${r.province || ''}</td>
-    <td>${r.healthzone || ''}</td>
-    <td>${r.ministry || ''}</td>
-    <td style="font-weight:600;color:${r.passfailed === 'ผ่าน' ? '#2E9E6B' : '#D47A4A'}">${r.passfailed || ''}</td>
-    <td>${r['3.1.3b'] || ''}</td>
-  </tr>`).join('');
-  
-  document.getElementById('tableCurrentBody').innerHTML = tableHTML || '<tr><td colspan="7" style="text-align:center">ไม่พบข้อมูล</td></tr>';
-  
-  // Update timestamp
-  const now = new Date();
-  const timeStr = now.toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'});
-  document.getElementById('lastUpdated').textContent = timeStr;
+  zoneEl.innerHTML = '<option value="">ทั้งหมด</option>' + zones.map(z => `<option value="${z}">${z}</option>`).join('');
+  provEl.innerHTML = '<option value="">ทั้งหมด</option>' + provs.map(p => `<option value="${p}">${p}</option>`).join('');
+  minEl.innerHTML = '<option value="">ทั้งหมด</option>' + ministries.map(m => `<option value="${m}">${m}</option>`).join('');
 }
 
-function drawDoughnutCurrent(canvas, pass, fail) {
-  const ctx = canvas.getContext('2d');
-  const W = canvas.width, H = canvas.height;
-  const cx = W/2, cy = H/2;
-  const r_outer = W*0.35;
-  const r_inner = W*0.2;
-  ctx.clearRect(0, 0, W, H);
+function drawDonutTab3(data) {
+  const canvas = document.getElementById('donutCanvasTab3');
+  if (!canvas) return;
   
-  const total = pass + fail || 1;
-  const pct = pass / total;
+  const vals = [], lbl = [];
+  const CM = {'ผ่าน': '#6DD8A8', 'ไม่ผ่าน': '#FFB997'};
   
-  // Green (pass) ring
-  ctx.fillStyle = '#6DD8A8';
-  ctx.beginPath();
-  ctx.arc(cx, cy, r_outer, -Math.PI/2, -Math.PI/2 + pct*Math.PI*2);
-  ctx.arc(cx, cy, r_inner, -Math.PI/2 + pct*Math.PI*2, -Math.PI/2, true);
-  ctx.fill();
-  
-  // Orange (fail) ring
-  ctx.fillStyle = '#FFB997';
-  ctx.beginPath();
-  ctx.arc(cx, cy, r_outer, -Math.PI/2 + pct*Math.PI*2, -Math.PI/2 + Math.PI*2);
-  ctx.arc(cx, cy, r_inner, -Math.PI/2 + Math.PI*2, -Math.PI/2 + pct*Math.PI*2, true);
-  ctx.fill();
-  
-  ctx.font = 'bold 22px Mitr,Tahoma';
-  ctx.fillStyle = '#3D2B47';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(Math.round(pct*100) + '%', cx, cy);
-}
-
-function drawProvinceBarCurrent(allData) {
-  const canvas = document.getElementById('barProvinceCurrent');
-  const ctx = canvas.getContext('2d');
-  
-  // Group by province
-  const prov = {};
-  allData.forEach(r => {
-    const p = r.province || 'ไม่ระบุ';
-    if (!prov[p]) prov[p] = {pass: 0, fail: 0};
-    if (r.passfailed === 'ผ่าน') prov[p].pass++;
-    else prov[p].fail++;
+  ['ผ่าน', 'ไม่ผ่าน'].forEach(s => {
+    const c = data.filter(r => r.passfailed === s).length;
+    if (c > 0) { vals.push(c); lbl.push(s); }
   });
   
-  const provinces = Object.keys(prov).sort();
-  
-  canvas.width = canvas.offsetWidth;
-  canvas.height = 300;
-  const W = canvas.width, H = canvas.height;
-  const pad = {l:120, r:30, t:20, b:40};
-  const cW = W - pad.l - pad.r, cH = H - pad.t - pad.b;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width = 140, H = canvas.height = 140;
+  const cx = W/2, cy = H/2, ro = W*0.35, ri = W*0.18;
   
   ctx.clearRect(0, 0, W, H);
+  const tot = vals.reduce((a,b) => a+b, 0);
   
-  const barWidth = cW / (provinces.length * 2.2);
+  let ang = -Math.PI/2;
+  vals.forEach((v,i) => {
+    const sl = (v/tot)*Math.PI*2;
+    ctx.beginPath();
+    ctx.arc(cx, cy, ro, ang, ang+sl);
+    ctx.arc(cx, cy, ri, ang+sl, ang, true);
+    ctx.closePath();
+    ctx.fillStyle = CM[lbl[i]] || '#E8C8D8';
+    ctx.fill();
+    ang += sl;
+  });
   
-  provinces.forEach((p, i) => {
-    const d = prov[p];
-    const total = d.pass + d.fail;
-    const passHeight = (d.pass/total) * cH;
-    const failHeight = (d.fail/total) * cH;
-    
-    const x = pad.l + i*barWidth*2.2;
-    const yBase = pad.t + cH;
-    
-    // Pass (green)
-    ctx.fillStyle = '#6DD8A8';
-    ctx.fillRect(x, yBase - passHeight, barWidth, passHeight);
-    
-    // Fail (orange)
-    ctx.fillStyle = '#FFB997';
-    ctx.fillRect(x, yBase - passHeight - failHeight, barWidth, failHeight);
-    
-    // Label
-    ctx.fillStyle = '#3D2B47';
+  ctx.beginPath();
+  ctx.arc(cx, cy, ri, 0, Math.PI*2);
+  ctx.fillStyle = '#fff';
+  ctx.fill();
+  
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.font = '700 20px Mitr,Tahoma';
+  ctx.fillStyle = '#3D2B47';
+  ctx.fillText(tot.toLocaleString(), cx, cy-3);
+  ctx.font = '12px Mitr,Tahoma';
+  ctx.fillStyle = '#9B7BAB';
+  ctx.fillText('แห่ง', cx, cy+10);
+  
+  document.getElementById('donutLegTab3').innerHTML = lbl.map((l,i) => 
+    `<span class="li" style="font-size:10px"><span class="ld" style="background:${CM[l]||'#E8C8D8'}"></span>${l} ${Math.round(vals[i]/tot*100)}%</span>`).join('');
+}
+
+function drawBarTab3(data) {
+  const pm = {};
+  data.forEach(r => {
+    const p = r.province || 'ไม่ระบุ';
+    if (!pm[p]) pm[p] = {pass: 0, fail: 0};
+    if (r.passfailed === 'ผ่าน') pm[p].pass++;
+    else pm[p].fail++;
+  });
+  
+  const provs = Object.keys(pm).sort((a,b) => a.localeCompare(b,'th'));
+  const cvs = document.getElementById('barCanvasTab3');
+  if (!cvs) return;
+  
+  const containerWidth = cvs.parentElement.offsetWidth - 20;
+  const colW = Math.max(20, Math.min(40, Math.floor(containerWidth / Math.max(provs.length, 1) * 0.7)));
+  cvs.width = Math.max(containerWidth - 20, provs.length * colW + 80);
+  cvs.height = 200;
+  
+  const W = cvs.width, H = cvs.height, ctx = cvs.getContext('2d');
+  ctx.clearRect(0,0,W,H);
+  
+  const pad = {t:10, b:60, l:40, r:10};
+  const cW = W - pad.l - pad.r, cH = H - pad.t - pad.b;
+  const maxV = Math.max(...provs.map(p => pm[p].pass + pm[p].fail), 1);
+  const bw = Math.max(6, colW * 0.6);
+  const gap = cW / Math.max(provs.length, 1);
+  
+  ctx.strokeStyle = '#F5E8F5';
+  ctx.lineWidth = 1;
+  for (let i=0; i<=4; i++) {
+    const y = pad.t + cH - (i/4)*cH;
+    ctx.beginPath();
+    ctx.moveTo(pad.l, y);
+    ctx.lineTo(pad.l+cW, y);
+    ctx.stroke();
+    ctx.fillStyle = '#999';
     ctx.font = '9px Mitr,Tahoma';
-    ctx.textAlign = 'center';
+    ctx.textAlign = 'right';
+    ctx.fillText(Math.round(maxV*i/4), pad.l-4, y+3);
+  }
+  
+  provs.forEach((p, i) => {
+    const x = pad.l + i*gap + gap/2 - bw/2;
+    const pH = (pm[p].pass/maxV)*cH, fH = (pm[p].fail/maxV)*cH;
+    
+    ctx.fillStyle = '#6DD8A8';
+    ctx.fillRect(x, pad.t+cH-pH, bw, pH);
+    
+    ctx.fillStyle = '#FFB997';
+    ctx.fillRect(x, pad.t+cH-pH-fH, bw, fH);
+    
     ctx.save();
-    ctx.translate(x + barWidth/2, yBase + 20);
-    ctx.rotate(-Math.PI/6);
+    ctx.translate(x+bw/2, pad.t+cH+8);
+    ctx.rotate(-Math.PI/4);
+    ctx.fillStyle = '#999';
+    ctx.font = '8px Mitr,Tahoma';
+    ctx.textAlign = 'right';
     ctx.fillText(p, 0, 0);
     ctx.restore();
   });
 }
 
-document.getElementById('yearSelect')?.addEventListener('change', (e) => {
-  currentYear = e.target.value;
-  refreshCurrent();
+function updateKPITab3(d) {
+  const tot = d.length, pass = d.filter(r => r.passfailed === 'ผ่าน').length;
+  const fail = d.filter(r => r.passfailed === 'ไม่ผ่าน').length;
+  const pct = tot ? Math.round(pass/tot*100) : 0;
+  
+  document.getElementById('chipTotalTab3').textContent = tot.toLocaleString();
+  document.getElementById('kpiPassTab3').textContent = pass.toLocaleString();
+  document.getElementById('kpiFailTab3').textContent = fail.toLocaleString();
+  document.getElementById('pctBarTab3').style.width = pct + '%';
+  document.getElementById('pctLblTab3').textContent = pct + '% ผ่านเกณฑ์';
+}
+
+function updateTableTab3(d) {
+  document.getElementById('tableCountTab3').textContent = `${d.length.toLocaleString()} รายการ`;
+  const tb = document.getElementById('tbodyTab3');
+  
+  if (!d.length) {
+    tb.innerHTML = '<tr><td colspan="7" class="msg">ไม่พบข้อมูล 🔍</td></tr>';
+    return;
+  }
+  
+  tb.innerHTML = d.slice(0, 500).map(r => `<tr>
+    <td><code style="font-size:11px;color:#9B3A7A">${r.userid || ''}</code></td>
+    <td>${r.center || ''}</td>
+    <td>${r.province || ''}</td>
+    <td style="text-align:center">${r.healthzone || ''}</td>
+    <td>${r.ministry || ''}</td>
+    <td><span class="badge ${r.passfailed === 'ผ่าน' ? 'bp' : 'bf'}">${r.passfailed || ''}</span></td>
+    <td>${r['3.1.3b'] || ''}</td>
+  </tr>`).join('');
+  
+  if (d.length > 500) {
+    tb.innerHTML += `<tr><td colspan="7" style="text-align:center;padding:8px;font-size:11px;color:var(--muted)">แสดง 500 จาก ${d.length.toLocaleString()} รายการ</td></tr>`;
+  }
+}
+
+function refreshTab3() {
+  const f = getFilteredTab3();
+  drawDonutTab3(f);
+  drawBarTab3(f);
+  updateKPITab3(f);
+  updateTableTab3(f);
+}
+
+function showTab3() {
+  populateFiltersTab3();
+  refreshTab3();
+}
+
+function drawTab3() {
+  showTab3();
+}
+
+// TAB 3 Event Listeners
+document.getElementById('yearSelectTab3')?.addEventListener('change', (e) => {
+  currentYearTab3 = e.target.value;
+  zoneFilterTab3Val = '';
+  provFilterTab3Val = '';
+  ministryFilterTab3Val = '';
+  activeStatusTab3 = '';
+  
+  document.getElementById('zoneFilterTab3').value = '';
+  document.getElementById('provFilterTab3').value = '';
+  document.getElementById('ministryFilterTab3').value = '';
+  document.getElementById('searchInputTab3').value = '';
+  document.querySelectorAll('#statusBtnsTab3 .sb').forEach(b => b.className = 'sb');
+  document.querySelector('#statusBtnsTab3 .sb[data-val=""]').classList.add('a-all');
+  
+  showTab3();
 });
 
-document.querySelectorAll('.status-btn')?.forEach(btn => {
-  btn.addEventListener('click', (e) => {
-    document.querySelectorAll('.status-btn').forEach(b => {
-      b.style.border = '1px solid var(--border)';
-      b.style.background = '#FFF';
-      b.style.color = 'var(--text)';
-    });
-    e.target.style.border = '1px solid #6DD8A8';
-    e.target.style.background = '#E0F7EF';
-    e.target.style.color = '#2E9E6B';
-    currentStatus = e.target.dataset.status;
-    refreshCurrent();
+['zoneFilterTab3', 'provFilterTab3', 'ministryFilterTab3'].forEach(id => {
+  document.getElementById(id)?.addEventListener('change', (e) => {
+    const idMap = {
+      'zoneFilterTab3': 'zoneFilterTab3Val',
+      'provFilterTab3': 'provFilterTab3Val',
+      'ministryFilterTab3': 'ministryFilterTab3Val'
+    };
+    eval(idMap[id] + " = '" + e.target.value + "'");
+    refreshTab3();
   });
 });
 
-document.getElementById('searchCurrent')?.addEventListener('input', (e) => {
-  const query = e.target.value.toLowerCase();
-  const rows = document.querySelectorAll('#tableCurrentYear tbody tr');
-  rows.forEach(row => {
-    const text = row.textContent.toLowerCase();
-    row.style.display = text.includes(query) ? '' : 'none';
-  });
+document.getElementById('searchInputTab3')?.addEventListener('input', refreshTab3);
+
+document.getElementById('resetBtnTab3')?.addEventListener('click', () => {
+  document.getElementById('zoneFilterTab3').value = '';
+  document.getElementById('provFilterTab3').value = '';
+  document.getElementById('ministryFilterTab3').value = '';
+  document.getElementById('searchInputTab3').value = '';
+  document.querySelectorAll('#statusBtnsTab3 .sb').forEach(b => b.className = 'sb');
+  document.querySelector('#statusBtnsTab3 .sb[data-val=""]').classList.add('a-all');
+  zoneFilterTab3Val = '';
+  provFilterTab3Val = '';
+  ministryFilterTab3Val = '';
+  activeStatusTab3 = '';
+  refreshTab3();
+});
+
+document.getElementById('statusBtnsTab3')?.addEventListener('click', e => {
+  const b = e.target.closest('.sb');
+  if (!b) return;
+  document.querySelectorAll('#statusBtnsTab3 .sb').forEach(x => x.className = 'sb');
+  activeStatusTab3 = b.dataset.val;
+  b.classList.add(activeStatusTab3 === '' ? 'a-all' : activeStatusTab3 === 'ผ่าน' ? 'a-pass' : 'a-fail');
+  refreshTab3();
 });
 </script>
 </body>
