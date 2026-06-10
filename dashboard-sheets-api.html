@@ -214,7 +214,7 @@ code{background:#F5E8F5;color:#9B3A7A;padding:2px 4px;border-radius:3px;font-siz
 
     <div class="card">
       <div class="card-title">📊 Year-by-Year Summary</div>
-      <div class="kpi-grid" id="kpiGrid"></div>
+      <div class="cgrid" id="yearSummaryGrid" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr))"></div>
     </div>
 
     <div class="card">
@@ -225,10 +225,10 @@ code{background:#F5E8F5;color:#9B3A7A;padding:2px 4px;border-radius:3px;font-siz
 
   <!-- TAB 2: COMPARISON -->
   <div class="tab-content" id="comparison">
-    <div class="card">
-      <div class="card-title" style="display:flex;align-items:center;gap:15px;flex-wrap:wrap">
-        เปรียบเทียบ:
-        <select class="year-select" id="year1">
+    <div class="top-bar" id="comparisonTopBar">
+      <div class="fg">
+        <label>เลือกปี (ปีแรก)</label>
+        <select id="year1" style="font-family:'Mitr',Tahoma;font-size:12px;padding:6px 9px;border:1.5px solid var(--border);border-radius:10px;background:var(--bg);color:var(--text)">
           <option value="2563">2563</option>
           <option value="2564">2564</option>
           <option value="2565">2565</option>
@@ -236,8 +236,11 @@ code{background:#F5E8F5;color:#9B3A7A;padding:2px 4px;border-radius:3px;font-siz
           <option value="2567">2567</option>
           <option value="2568">2568</option>
         </select>
-        <span style="font-weight:600;color:var(--muted)">vs</span>
-        <select class="year-select" id="year2">
+      </div>
+      <div class="bar-sep"></div>
+      <div class="fg">
+        <label>เลือกปี (ปีที่สอง)</label>
+        <select id="year2" style="font-family:'Mitr',Tahoma;font-size:12px;padding:6px 9px;border:1.5px solid var(--border);border-radius:10px;background:var(--bg);color:var(--text)">
           <option value="2563">2563</option>
           <option value="2564">2564</option>
           <option value="2565">2565</option>
@@ -546,15 +549,29 @@ function drawTab1() {
     return {year: y, total: data.length, pass, pct: data.length ? Math.round(pass/data.length*100) : 0};
   });
   
-  // KPI Grid
-  const kpiHTML = stats.map(s => `
-    <div class="kpi">
-      <div class="kpi-label">${s.year}</div>
-      <div class="kpi-value">${s.pct}%</div>
-      <div class="kpi-change">${s.pass}/${s.total}</div>
-    </div>
-  `).join('');
-  document.getElementById('kpiGrid').innerHTML = kpiHTML;
+  // Year Summary Cards
+  const cardHTML = stats.map(s => {
+    const failCount = s.total - s.pass;
+    return `
+      <div class="card" style="border-left:4px solid var(--pink-d);padding:12px">
+        <div style="font-size:13px;font-weight:600;color:var(--pink-d);margin-bottom:10px">ปี ${s.year}</div>
+        <div style="background:linear-gradient(135deg,var(--mint-l),#E8FFF5);border-radius:var(--rs);padding:8px;margin-bottom:6px">
+          <div style="font-size:9px;color:var(--mint-d);margin-bottom:2px">ผ่านเกณฑ์ (แห่ง)</div>
+          <div style="font-size:18px;font-weight:700;color:var(--mint-d)">${s.pass.toLocaleString()}</div>
+        </div>
+        <div style="background:linear-gradient(135deg,var(--orange-l),#FFF5E8);border-radius:var(--rs);padding:8px;margin-bottom:8px">
+          <div style="font-size:9px;color:var(--orange-d);margin-bottom:2px">ยังไม่ผ่าน (แห่ง)</div>
+          <div style="font-size:18px;font-weight:700;color:var(--orange-d)">${failCount.toLocaleString()}</div>
+        </div>
+        <div style="font-size:9px;color:var(--muted);margin-bottom:4px">อัตราผ่าน</div>
+        <div style="background:#F0D8E8;border-radius:6px;overflow:hidden;height:6px;margin-bottom:4px">
+          <div style="height:100%;background:linear-gradient(90deg,var(--mint-d),#8AE8C0);width:${s.pct}%;border-radius:6px"></div>
+        </div>
+        <div style="font-size:11px;font-weight:600;color:var(--mint-d)">${s.pct}% ผ่าน</div>
+      </div>
+    `;
+  }).join('');
+  document.getElementById('yearSummaryGrid').innerHTML = cardHTML;
   
   // Trend Chart
   const ctx = document.getElementById('trendChart').getContext('2d');
