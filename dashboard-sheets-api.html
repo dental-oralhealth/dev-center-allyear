@@ -248,10 +248,28 @@ code{background:#F5E8F5;color:#9B3A7A;padding:2px 4px;border-radius:3px;font-siz
           <option value="2567">2567</option>
           <option value="2568" selected>2568</option>
         </select>
-      </div>      
+      </div>
+      <button id="resetBtnTab2" style="background:linear-gradient(135deg,#C7CEEA,#E0E8FF);color:#5A67C4;border:none;font-family:'Mitr',Tahoma;font-size:11px;font-weight:600;padding:4px 11px;border-radius:20px;cursor:pointer;transition:all .2s;margin-left:auto">🔄 รีเซ็ต</button>
     </div>
 
-    <!-- Donut Charts Side-by-side -->
+    <!-- Summary Insight Card -->
+    <div class="card" style="background:linear-gradient(135deg,#FFE4ED,#ECEFFE);border:1.5px solid var(--pink);margin-bottom:16px">
+      <div class="card-title">📊 สรุปผล</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:12px">
+        <div style="background:#E8FFF5;border-radius:var(--rs);padding:10px;text-align:center;border-left:4px solid var(--mint-d)">
+          <div style="font-size:9px;color:var(--muted);margin-bottom:4px">จังหวัดดีขึ้น</div>
+          <div style="font-size:18px;font-weight:700;color:var(--mint-d)" id="summaryImproved">—</div>
+        </div>
+        <div style="background:#FFF5E8;border-radius:var(--rs);padding:10px;text-align:center;border-left:4px solid var(--orange-d)">
+          <div style="font-size:9px;color:var(--muted);margin-bottom:4px">จังหวัดลดลง</div>
+          <div style="font-size:18px;font-weight:700;color:var(--orange-d)" id="summaryDeclined">—</div>
+        </div>
+        <div style="background:#F0EEFF;border-radius:var(--rs);padding:10px;text-align:center;border-left:4px solid var(--lav-d)">
+          <div style="font-size:9px;color:var(--muted);margin-bottom:4px">จังหวัดไม่เปลี่ยน</div>
+          <div style="font-size:18px;font-weight:700;color:var(--lav-d)" id="summaryUnchanged">—</div>
+        </div>
+      </div>
+    </div>
     <div class="card">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px">
         <div style="text-align:center">
@@ -798,6 +816,11 @@ function drawTab2() {
     else sameCount++;
   });
   
+  // Update summary card
+  document.getElementById('summaryImproved').textContent = improveCount;
+  document.getElementById('summaryDeclined').textContent = declineCount;
+  document.getElementById('summaryUnchanged').textContent = sameCount;
+  
   const pct1Overall = data1.length ? Math.round(pass1/data1.length*100) : 0;
   const pct2Overall = data2.length ? Math.round(pass2/data2.length*100) : 0;
   const changePct = pct2Overall - pct1Overall;
@@ -991,6 +1014,12 @@ function drawComparisonBarChart(provinces, prov1, prov2) {
 
 document.getElementById('year1')?.addEventListener('change', () => setTimeout(drawTab2, 50));
 document.getElementById('year2')?.addEventListener('change', () => setTimeout(drawTab2, 50));
+
+document.getElementById('resetBtnTab2')?.addEventListener('click', () => {
+  document.getElementById('year1').value = '2563';
+  document.getElementById('year2').value = '2568';
+  drawTab2();
+});
 
 // TAB 3: CURRENT YEAR (Adapted from index2567)
 let currentYearTab3 = '2568';
